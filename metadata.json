@@ -1,0 +1,6 @@
+{
+  "name": "Daily Health & Habit Tracker",
+  "description": "A comprehensive daily dashboard for physical fitness, healthy eating, book reading, water intake, daily learning, habits, sleep, mood, and mindfulness with an interactive pomodoro timer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,1493 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daily Health & Habit Tracker</title>
+    <!-- Import beautiful Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Link to our vanilla stylesheet -->
+    <link rel="stylesheet" href="/style.css" />
+    <!-- Load Lucide Icons CDN for beautiful vector icons in vanilla JS -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body class="light-theme">
+    <!-- Main App Container -->
+    <div class="app-container" id="app">
+      
+      <!-- Notifications Toast Placement -->
+      <div class="toast-container" id="toast-container"></div>
+
+      <!-- LEFT SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <div class="logo">
+            <i data-lucide="activity" class="logo-icon text-emerald"></i>
+            <span class="logo-text">PulseLine</span>
+          </div>
+          <button class="sidebar-toggle-btn mobile-only" id="sidebar-close-btn">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <!-- User profile section -->
+        <div class="user-profile">
+          <div class="avatar-wrapper">
+            <div class="avatar">
+              <span class="avatar-initials">JD</span>
+              <span class="online-indicator"></span>
+            </div>
+            <div class="level-badge">LVL 4</div>
+          </div>
+          <div class="user-info">
+            <h4 class="user-name">John Doe</h4>
+            <p class="user-title">Wellness Achiever</p>
+          </div>
+          <!-- Progress to next level -->
+          <div class="xp-container">
+            <div class="xp-labels">
+              <span>XP Level Up</span>
+              <span id="xp-text">350 / 500</span>
+            </div>
+            <div class="xp-bar-bg">
+              <div class="xp-bar-fill" id="xp-fill" style="width: 70%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation items -->
+        <nav class="sidebar-nav">
+          <ul class="nav-list">
+            <li class="nav-item active" data-tab="dashboard">
+              <i data-lucide="layout-dashboard"></i>
+              <span>Dashboard</span>
+              <span class="badge badge-primary">Feed</span>
+            </li>
+            <li class="nav-item" data-tab="workouts">
+              <i data-lucide="dumbbell"></i>
+              <span>Gym & Workouts</span>
+            </li>
+            <li class="nav-item" data-tab="diet">
+              <i data-lucide="salad"></i>
+              <span>Food & Diet</span>
+            </li>
+            <li class="nav-item" data-tab="reading">
+              <i data-lucide="book-open"></i>
+              <span>Book Tracker</span>
+            </li>
+            <li class="nav-item" data-tab="hydration">
+              <i data-lucide="droplet"></i>
+              <span>Water Intake</span>
+            </li>
+            <li class="nav-item" data-tab="habits">
+              <i data-lucide="check-square"></i>
+              <span>Daily Habits</span>
+            </li>
+            <li class="nav-item" data-tab="sleep-mood">
+              <i data-lucide="moon"></i>
+              <span>Sleep & Mood</span>
+            </li>
+            <li class="nav-item" data-tab="mindfulness">
+              <i data-lucide="heart"></i>
+              <span>Breathing & Zen</span>
+            </li>
+            <li class="nav-item" data-tab="focus">
+              <i data-lucide="timer"></i>
+              <span>Focus Timer</span>
+            </li>
+            <li class="nav-item" data-tab="analytics">
+              <i data-lucide="activity-square"></i>
+              <span>Goals & Analytics</span>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer">
+          <p class="credit">PulseLine v1.0 • Client Storage Enabled</p>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT SECTION -->
+      <main class="main-content">
+        
+        <!-- TOP NAVBAR -->
+        <header class="top-navbar">
+          <div class="nav-left">
+            <button class="icon-btn sidebar-toggle-btn m-right-sm" id="sidebar-toggle-btn">
+              <i data-lucide="menu"></i>
+            </button>
+            <div class="nav-date-wrapper">
+              <h1 class="nav-welcome" id="welcome-message">Hello, John!</h1>
+              <p class="nav-date" id="current-date">Tuesday, May 26, 2026</p>
+            </div>
+          </div>
+
+          <div class="nav-right">
+            <!-- Weather widget placeholder -->
+            <div class="weather-widget" title="Local weather based on sandbox server location">
+              <i data-lucide="cloud-sun" class="weather-icon"></i>
+              <div class="weather-info">
+                <span class="weather-temp">72°F</span>
+                <span class="weather-condition">Partly Cloudy</span>
+              </div>
+            </div>
+
+            <!-- Global Streak Badge -->
+            <div class="global-streak" title="Daily habit completion streak!">
+              <i data-lucide="flame" class="streak-icon text-orange"></i>
+              <div class="streak-details">
+                <span id="global-streak-count" class="streak-number">5</span>
+                <span class="streak-label">DAYS</span>
+              </div>
+            </div>
+
+            <!-- Theme Toggle Button -->
+            <button class="nav-icon-btn" id="theme-toggle" title="Toggle color scheme">
+              <i data-lucide="moon" id="theme-icon-dark"></i>
+              <i data-lucide="sun" id="theme-icon-light" class="hidden"></i>
+            </button>
+
+            <!-- Notifications Bell -->
+            <div class="notification-bell-wrapper">
+              <button class="nav-icon-btn" id="notification-bell" title="Notifications">
+                <i data-lucide="bell"></i>
+                <span class="notification-indicator"></span>
+              </button>
+              <!-- Notifications Dropdown -->
+              <div class="notifications-dropdown hidden" id="notifications-dropdown">
+                <div class="notif-header">
+                  <h5>Notifications</h5>
+                  <button class="text-btn text-xs" id="clear-notifications">Mark all read</button>
+                </div>
+                <div class="notif-body" id="notif-list">
+                  <!-- Notifications dynamically inserted -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- CONTENT SCROLL WORKSPACE -->
+        <div class="workspace-scrollbar-container">
+          
+          <!-- TAB 1: DASHBOARD OVERVIEW -->
+          <section class="tab-panel active" id="tab-dashboard">
+            <!-- Top Summary Stats Grid -->
+            <div class="stats-grid m-bottom">
+              <div class="stat-card border-left-emerald">
+                <div class="stat-icon-wrapper bg-emerald-light">
+                  <i data-lucide="dumbbell" class="text-emerald animate-pulse"></i>
+                </div>
+                <div class="stat-data">
+                  <span class="stat-title">Daily Workout</span>
+                  <span class="stat-value" id="dash-workout-status">Not Logged</span>
+                </div>
+              </div>
+              <div class="stat-card border-left-blue">
+                <div class="stat-icon-wrapper bg-blue-light">
+                  <i data-lucide="droplet" class="text-blue"></i>
+                </div>
+                <div class="stat-data">
+                  <span class="stat-title">Hydration</span>
+                  <span class="stat-value" id="dash-water-status">0 ml / 2500 ml</span>
+                </div>
+              </div>
+              <div class="stat-card border-left-amber">
+                <div class="stat-icon-wrapper bg-amber-light">
+                  <i data-lucide="book-open" class="text-amber"></i>
+                </div>
+                <div class="stat-data">
+                  <span class="stat-title">Reading Goal</span>
+                  <span class="stat-value" id="dash-reading-status">0 pages</span>
+                </div>
+              </div>
+              <div class="stat-card border-left-purple">
+                <div class="stat-icon-wrapper bg-purple-light">
+                  <i data-lucide="check-square" class="text-purple"></i>
+                </div>
+                <div class="stat-data">
+                  <span class="stat-title">Habit Progress</span>
+                  <span class="stat-value" id="dash-habit-status">0% Complete</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bento Master Grid -->
+            <div class="bento-grid">
+              
+              <!-- Left Big Column -->
+              <div class="bento-col-main">
+                
+                <!-- Welcome Banner / Motivation Quote -->
+                <div class="welcome-banner card bg-gradient-primary m-bottom">
+                  <div class="banner-content">
+                    <span class="banner-tag">DAILY MOTIVATION</span>
+                    <h2 class="banner-title" id="daily-quote">"The only bad workout is the one that didn't happen."</h2>
+                    <p class="banner-author" id="daily-quote-author">— Unknown</p>
+                    <div class="banner-buttons m-top-md">
+                      <button class="btn btn-white-glass btn-sm" id="btn-next-quote">
+                        <i data-lucide="refresh-cw" class="btn-icon"></i> New Quote
+                      </button>
+                      <button class="btn btn-white btn-sm" id="btn-quick-meditate">
+                        <i data-lucide="heart" class="btn-icon"></i> Start 2-Min Zen
+                      </button>
+                    </div>
+                  </div>
+                  <div class="banner-illustration mobile-hidden">
+                    <i data-lucide="sun" class="sun-icon-mega"></i>
+                  </div>
+                </div>
+
+                <!-- Learning Section & Challenge -->
+                <div class="card m-bottom border-top-emerald">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="graduation-cap" class="text-emerald"></i>
+                      <h3>Learn Something New</h3>
+                    </div>
+                    <span class="badge badge-emerald" id="learning-streak">Streak: 0 Days</span>
+                  </div>
+                  <div class="card-body">
+                    <div class="learning-challenge-box" id="learning-box">
+                      <div class="learning-category" id="learn-category">FITNESS FACT</div>
+                      <h4 class="learning-title" id="learn-title">Stretching improves neuromuscular coordination and decreases stress chemicals in your muscle spindles.</h4>
+                      <p class="learning-description" id="learn-description">Dynamic exercises before training primes pathways, while static cooldown targets tissue length.</p>
+                      <div class="learning-action-row">
+                        <button class="btn btn-emerald" id="btn-complete-learning">
+                          <i data-lucide="award" class="btn-icon"></i> Mark Challenge Completed
+                        </button>
+                        <button class="btn btn-outline" id="btn-next-learning" title="Generate another learning capsule">
+                          <i data-lucide="shuffle" class="btn-icon"></i> Shuffle Hint
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Habits Snapshot List -->
+                <div class="card">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="list-checks" class="text-primary"></i>
+                      <h3>Today's Essential Habits</h3>
+                    </div>
+                    <button class="text-btn link-btn" id="btn-go-habits">View Habits Ledger</button>
+                  </div>
+                  <div class="card-body">
+                    <div class="habit-snapshot-grid" id="dashboard-habits-list">
+                      <!-- Dynamically loaded quick checklist -->
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Right Side Column -->
+              <div class="bento-col-side">
+                
+                <!-- Quick Water Widget -->
+                <div class="card m-bottom border-top-blue overflow-hidden">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="glass-water" class="text-blue"></i>
+                      <h3>Quick Hydration</h3>
+                    </div>
+                    <span class="badge badge-blue" id="water-badge">0%</span>
+                  </div>
+                  <div class="card-body text-center p-relative">
+                    <div class="water-bottle-container">
+                      <div class="water-wave" id="dash-water-wave" style="height: 0%;"></div>
+                      <div class="water-bottle-cap"></div>
+                      <div class="water-bottle-body">
+                        <span class="bottle-label" id="dash-water-percentage">0%</span>
+                      </div>
+                    </div>
+                    <p class="text-muted m-top m-bottom-sm font-sm">Add Water Consumption</p>
+                    <div class="quick-water-buttons">
+                      <button class="btn btn-blue-light flex-1 font-xs pointer btn-water-add" data-amount="250">
+                        +250ml
+                      </button>
+                      <button class="btn btn-blue flex-1 font-xs pointer text-white btn-water-add" data-amount="500">
+                        +500ml
+                      </button>
+                      <button class="btn btn-blue-dark flex-1 font-xs pointer text-white btn-water-add" data-amount="1000">
+                        +1.0L
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mood Tracker Quick -->
+                <div class="card m-bottom border-top-indigo">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="smile" class="text-indigo"></i>
+                      <h3>How Are You Feeling?</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <p class="font-xs text-muted m-bottom">Select your mood to log baseline emotional frequency:</p>
+                    <div class="mood-selectors-row">
+                      <button class="mood-btn" data-mood="superb" title="Fantastic!">
+                        <span class="mood-emoji">🤩</span>
+                        <span class="mood-label">Superb</span>
+                      </button>
+                      <button class="mood-btn" data-mood="good" title="Content / Happy">
+                        <span class="mood-emoji">🙂</span>
+                        <span class="mood-label">Good</span>
+                      </button>
+                      <button class="mood-btn" data-mood="neutral" title="Average / Okay">
+                        <span class="mood-emoji">😐</span>
+                        <span class="mood-label">Neutral</span>
+                      </button>
+                      <button class="mood-btn" data-mood="tired" title="Fatigued / Sleepy">
+                        <span class="mood-emoji">🥱</span>
+                        <span class="mood-label">Tired</span>
+                      </button>
+                      <button class="mood-btn" data-mood="stressed" title="Stressed / Overwhelmed">
+                        <span class="mood-emoji">🤯</span>
+                        <span class="mood-label">Stressed</span>
+                      </button>
+                    </div>
+                    <div class="mood-logged-today m-top-sm border-top font-xs text-center p-top-xs text-secondary hidden" id="mood-today-indicator">
+                      Today's Logged Mood: <strong id="mood-today-value">None</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- AI Style Wellness Suggestions placeholder -->
+                <div class="card border-top-purple bg-purple-mist">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="sparkles" class="text-purple"></i>
+                      <h3>AI Wellness Suggestion</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="ai-suggestion-box">
+                      <p class="ai-text" id="ai-suggestion-text">"Based on your 5-day streak, John! It's an excellent day to log a Cardio routine. Aim to hit 2.5L of water intake before 8:00 PM to support optimal active metabolic processing."</p>
+                      <div class="m-top text-right">
+                        <button class="btn btn-outline-purple btn-xs" id="btn-regenerate-ai">
+                          <i data-lucide="sparkles" class="btn-icon"></i> Refine Wellness Suggestion
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- TAB 2: GYM & WORKOUT TRACKER -->
+          <section class="tab-panel hidden" id="tab-workouts">
+            <div class="grid-2col">
+              
+              <!-- Left workout column: planner/logger -->
+              <div class="flex-column gap-md">
+                
+                <!-- Quick workout category stats -->
+                <div class="card border-top-emerald">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="notebook-tabs" class="text-emerald"></i>
+                      <h3>Workout Logger & Scheduler</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <form class="custom-form" id="workout-form">
+                      <div class="form-group">
+                        <label for="workout-name">Routine/Exercise Name</label>
+                        <input type="text" id="workout-name" placeholder="e.g. Upper Body Hypertrophy, Jogging" required />
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group flex-1">
+                          <label for="workout-category">Category</label>
+                          <select id="workout-category">
+                            <option value="strength">🏋️‍♂️ Strength</option>
+                            <option value="cardio">🏃‍♂️ Cardio</option>
+                            <option value="flexibility">🧘‍♂️ Flexibility</option>
+                            <option value="recovery">🩹 Recovery</option>
+                          </select>
+                        </div>
+                        <div class="form-group flex-1">
+                          <label for="workout-duration">Duration (mins)</label>
+                          <input type="number" id="workout-duration" placeholder="e.g. 45" min="1" max="300" required />
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group flex-1">
+                          <label for="workout-calories">Burnt Calories (kcal)</label>
+                          <input type="number" id="workout-calories" placeholder="e.g. 350" min="0" max="2000" />
+                          <span class="input-helper">Leave empty for automatic estimates</span>
+                        </div>
+                        <div class="form-group flex-1">
+                          <label for="workout-day">Day of Week</label>
+                          <select id="workout-day">
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                            <option value="Sunday">Sunday</option>
+                          </select>
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn-emerald w-full">
+                        <i data-lucide="plus-circle" class="btn-icon"></i> Add Routine & Log Workout
+                      </button>
+                    </form>
+                  </div>
+                </div>
+
+                <!-- Custom routines recommendations templates -->
+                <div class="card border-top-neutral">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="dumbbell-icon" class="text-emerald"></i>
+                      <h3>Standard routines</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="routine-quick-templates">
+                      <div class="routine-template-card" data-routine-name="HIIT Cardio Blast" data-category="cardio" data-duration="25" data-calories="300">
+                        <div class="template-header">
+                          <span class="tag-cardio font-xs font-bold rounded-sm px-xs py-xxs text-emerald">Cardio</span>
+                          <span class="font-xs font-mono text-muted">25 Min</span>
+                        </div>
+                        <span class="template-title block m-top-xs font-bold font-sm">HIIT Cardio Blast</span>
+                        <p class="font-xs text-muted">A fast cardio burner targeting cardiovascular core strength.</p>
+                      </div>
+
+                      <div class="routine-template-card" data-routine-name="Power Push Session" data-category="strength" data-duration="50" data-calories="420">
+                        <div class="template-header">
+                          <span class="tag-strength font-xs font-bold rounded-sm px-xs py-xxs text-orange">Strength</span>
+                          <span class="font-xs font-mono text-muted">50 Min</span>
+                        </div>
+                        <span class="template-title block m-top-xs font-bold font-sm">Power Push Session</span>
+                        <p class="font-xs text-muted">Chest, shoulders, power triceps compound routines.</p>
+                      </div>
+
+                      <div class="routine-template-card" data-routine-name="Zen Vinyasa Recovery" data-category="flexibility" data-duration="30" data-calories="120">
+                        <div class="template-header">
+                          <span class="tag-flexibility font-xs font-bold rounded-sm px-xs py-xxs text-blue">Flexibility</span>
+                          <span class="font-xs font-mono text-muted">30 Min</span>
+                        </div>
+                        <span class="template-title block m-top-xs font-bold font-sm">Yoga Stretch</span>
+                        <p class="font-xs text-muted">Full-body mobility recovery flow and meditative mindfulness posture.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Right workout column: Analytics tracker -->
+              <div class="flex-column gap-md">
+                
+                <!-- Weekly activity heatmap & analytics -->
+                <div class="card border-top-emerald">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="bar-chart-2" class="text-emerald"></i>
+                      <h3>Weekly Caloric Output & Workout Streak</h3>
+                    </div>
+                    <span class="badge badge-emerald" id="workout-streak-badge">3 Streak</span>
+                  </div>
+                  <div class="card-body">
+                    <!-- Custom styled simple analytics bar chart -->
+                    <div class="calories-chart-container">
+                      <div class="calories-chart-y">
+                        <span>500 kcal</span>
+                        <span>250 kcal</span>
+                        <span>0 kcal</span>
+                      </div>
+                      <div class="chart-bars" id="weekly-workout-chart">
+                        <!-- Bars injected by JS: height relative to kcal logged -->
+                        <div class="chart-bar-wrapper">
+                          <div class="chart-bar" id="bar-monday" style="height: 10%;"></div>
+                          <span class="chart-bar-label">Mon</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                          <div class="chart-bar" id="bar-tuesday" style="height: 10%;"></div>
+                          <span class="chart-bar-label">Tue</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                          <div class="chart-bar" id="bar-wednesday" style="height: 10%;"></div>
+                          <span class="chart-bar-label">Wed</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                          <div class="chart-bar" id="bar-thursday" style="height: 10%;"></div>
+                          <span class="chart-bar-label">Thu</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                          <div class="chart-bar" id="bar-friday" style="height: 10%;"></div>
+                          <span class="chart-bar-label">Fri</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                          <div class="chart-bar" id="bar-saturday" style="height: 10%;"></div>
+                          <span class="chart-bar-label">Sat</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                          <div class="chart-bar" id="bar-sunday" style="height: 10%;"></div>
+                          <span class="chart-bar-label">Sun</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="stats-row flex justify-between m-top-md bg-neutral p-sm rounded-sm">
+                      <div class="stats-item text-center flex-1">
+                        <span class="block text-muted font-xs">Weekly Workouts</span>
+                        <span class="font-bold text-lg" id="workout-total-count">0</span>
+                      </div>
+                      <div class="stats-border-line"></div>
+                      <div class="stats-item text-center flex-1">
+                        <span class="block text-muted font-xs">Calories Spent (Week)</span>
+                        <span class="font-bold text-lg text-emerald" id="workout-total-calories">0 kcal</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- History record display -->
+                <div class="card">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="history" class="text-secondary"></i>
+                      <h3>Workout History Logs</h3>
+                    </div>
+                    <button class="text-btn text-xs text-rose" id="btn-clear-workouts">Clear Logs</button>
+                  </div>
+                  <div class="card-body">
+                    <div class="scroll-list-height-sm" id="workout-history-list">
+                      <!-- Rendered dynamically -->
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- TAB 3: DAILY FOOD & DIET PLANNER -->
+          <section class="tab-panel hidden" id="tab-diet">
+            <!-- Header controls -->
+            <div class="card m-bottom border-top-emerald">
+              <div class="card-body flex justify-between align-center flex-wrap gap-sm">
+                <div>
+                  <h3 class="m-bottom-xxs">Food, Macros & Diet Scheduler</h3>
+                  <p class="text-muted font-xs">Plan nutrition cycles, follow specific meal requirements, track calories.</p>
+                </div>
+                <div class="toggle-control-section bg-neutral p-xs rounded-lg flex align-center gap-xs">
+                  <span class="font-xs font-bold text-muted p-left-xs">Diet preference:</span>
+                  <div class="diet-toggle-switch">
+                    <button class="btn btn-sm btn-toggle-diet active" id="diet-veg" data-preferences="veg">🍀 Vegetarian</button>
+                    <button class="btn btn-sm btn-toggle-diet" id="diet-nonveg" data-preferences="nonveg">🥩 Non-Vegetarian</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid-2col">
+              
+              <!-- Left side: today's plan templates -->
+              <div class="flex-column gap-md">
+                <div class="card border-top-neutral">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="utensils" class="text-emerald"></i>
+                      <h3>Today's Diet Prescription</h3>
+                    </div>
+                    <span class="badge badge-emerald" id="macro-diet-header-label">Vegetarian Diet</span>
+                  </div>
+                  <div class="card-body">
+                    <div class="meal-list-group" id="diet-meal-schedule-list">
+                      <!-- Dynamically rendered meals -->
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card border-top-neutral">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="heart" class="text-rose"></i>
+                      <h3>Healthy Eating Recommendations</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="eating-tips-masonry" id="diet-tips-container">
+                      <!-- Dynamically rendered healthy tips -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right side: Weekly summary logs -->
+              <div class="flex-column gap-md">
+                
+                <!-- Calorie Tracking Widget -->
+                <div class="card border-top-emerald">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="flame" class="text-orange"></i>
+                      <h3>Daily Diet Calorie Intake Tracker</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="calorie-progress-summary">
+                      <div class="calorie-circle-progress" id="macro-ratio-pie">
+                        <div class="calorie-circle-inner">
+                          <span class="font-mono text-muted text-xs">CONSUMED</span>
+                          <span class="font-bold text-xxl" id="diet-consumed-calories">1,250</span>
+                          <span class="font-mono text-muted text-xs">/ 2,200 kcal</span>
+                        </div>
+                      </div>
+
+                      <div class="progress-details flex-1 flex-column gap-sm">
+                        <!-- Carbs Tracker -->
+                        <div>
+                          <div class="progress-labels flex justify-between font-xs font-bold m-bottom-xxs">
+                            <span>🌾 Carbohydrates</span>
+                            <span id="diet-metrics-carbs">120g / 240g</span>
+                          </div>
+                          <div class="progress-bar-bg height-xs">
+                            <div class="progress-bar-fill bg-indigo" id="diet-fill-carbs" style="width: 50%;"></div>
+                          </div>
+                        </div>
+
+                        <!-- Protein Tracker -->
+                        <div>
+                          <div class="progress-labels flex justify-between font-xs font-bold m-bottom-xxs">
+                            <span>🥩 Protein</span>
+                            <span id="diet-metrics-protein">75g / 130g</span>
+                          </div>
+                          <div class="progress-bar-bg height-xs">
+                            <div class="progress-bar-fill bg-orange" id="diet-fill-protein" style="width: 57%;"></div>
+                          </div>
+                        </div>
+
+                        <!-- Fats Tracker -->
+                        <div>
+                          <div class="progress-labels flex justify-between font-xs font-bold m-bottom-xxs">
+                            <span>🥑 Healthy Fats</span>
+                            <span id="diet-metrics-fats">42g / 70g</span>
+                          </div>
+                          <div class="progress-bar-bg height-xs">
+                            <div class="progress-bar-fill bg-amber" id="diet-fill-fats" style="width: 60%;"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Custom Meal logger -->
+                <div class="card">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="plus-circle" class="text-emerald"></i>
+                      <h3>Log custom meal consume</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <form class="custom-form" id="diet-entry-form">
+                      <div class="form-row">
+                        <div class="form-group flex-2">
+                          <label for="diet-meal-name">Meal Content</label>
+                          <input type="text" id="diet-meal-name" placeholder="e.g. Avocado Toast, Whey Protein Shake" required />
+                        </div>
+                        <div class="form-group flex-1">
+                          <label for="diet-meal-type">Meal Slot</label>
+                          <select id="diet-meal-type">
+                            <option value="Breakfast">Breakfast</option>
+                            <option value="Lunch">Lunch</option>
+                            <option value="Snack">Snack</option>
+                            <option value="Dinner">Dinner</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group flex-1">
+                          <label for="diet-input-kcal">Calories (kcal)</label>
+                          <input type="number" id="diet-input-kcal" placeholder="e.g. 350" required min="1" max="1500" />
+                        </div>
+                        <div class="form-group flex-1">
+                          <label for="diet-input-protein">Protein (g)</label>
+                          <input type="number" id="diet-input-protein" placeholder="e.g. 20" required min="0" max="150" />
+                        </div>
+                        <div class="form-group flex-1">
+                          <label for="diet-input-carbs">Carbs (g)</label>
+                          <input type="number" id="diet-input-carbs" placeholder="e.g. 40" required min="0" max="250" />
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn-emerald w-full">
+                        <i data-lucide="plus" class="btn-icon"></i> Track & Add Macros
+                      </button>
+                    </form>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- TAB 4: BOOK READING TRACKER -->
+          <section class="tab-panel hidden" id="tab-reading">
+            <div class="grid-2col">
+              
+              <!-- Left side: Log & recommendations -->
+              <div class="flex-column gap-md">
+                
+                <!-- Book status and page logger -->
+                <div class="card border-top-amber">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="book-marked" class="text-amber"></i>
+                      <h3>Active Reading session</h3>
+                    </div>
+                    <span class="badge badge-amber" id="reading-streak-badge">0 Day Streak</span>
+                  </div>
+                  <div class="card-body">
+                    
+                    <!-- Reading details -->
+                    <div class="current-book-showcase flex gap-md p-bottom border-bottom m-bottom-md flex-wrap">
+                      <div class="book-cover-mock bg-gradient-amber text-white font-bold text-center flex align-center justify-center rounded-sm shadow-sm" id="active-book-cover">
+                        ATOM
+                      </div>
+                      <div class="book-details flex-1 min-w-xs">
+                        <span class="text-muted font-xs block" id="active-book-category">LIFE PRODUCTIVITY</span>
+                        <h4 class="font-bold text-lg m-bottom-xxs" id="active-book-title">Atomic Habits</h4>
+                        <p class="text-muted font-xs m-bottom" id="active-book-author">by James Clear</p>
+                        
+                        <!-- Page progress -->
+                        <div class="row-progress-pages">
+                          <div class="flex justify-between font-xs font-mono font-bold m-bottom-xxs">
+                            <span>Chapters Accomplishment</span>
+                            <span id="active-book-pages-text">145 / 320 pages</span>
+                          </div>
+                          <div class="progress-bar-bg height-sm">
+                            <div class="progress-bar-fill bg-amber" id="active-book-progress-bar" style="width: 45%;"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Progress updating inputs -->
+                    <form class="custom-form" id="reading-log-form">
+                      <div class="form-row">
+                        <div class="form-group flex-2">
+                          <label for="reading-current-title">Change Active Book Title</label>
+                          <input type="text" id="reading-current-title" value="Atomic Habits" placeholder="Book name" />
+                        </div>
+                        <div class="form-group flex-1">
+                          <label for="reading-current-author">Author</label>
+                          <input type="text" id="reading-current-author" value="James Clear" placeholder="Author name" />
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group flex-1">
+                          <label for="reading-total-pages">Target Pages Count</label>
+                          <input type="number" id="reading-total-pages" value="320" min="1" required />
+                        </div>
+                        <div class="form-group flex-1">
+                          <label for="reading-pages-logged">Update Current Page</label>
+                          <input type="number" id="reading-pages-logged" value="145" min="0" required />
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn-amber w-full">
+                        <i data-lucide="check" class="btn-icon"></i> Save Progress & Update Streak
+                      </button>
+                    </form>
+
+                  </div>
+                </div>
+
+                <!-- Suggested Books Feed -->
+                <div class="card border-top-neutral">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="bookmark" class="text-amber"></i>
+                      <h3>Recommended wellness Reading</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="flex gap-xs m-bottom flex-wrap">
+                      <button class="btn btn-xs btn-outline-amber active filter-book-btn" data-category="Self-Improvement">Self-Improvement</button>
+                      <button class="btn btn-xs btn-outline-amber filter-book-btn" data-category="Finance">Finance</button>
+                      <button class="btn btn-xs btn-outline-amber filter-book-btn" data-category="Productivity">Productivity</button>
+                      <button class="btn btn-xs btn-outline-amber filter-book-btn" data-category="Fiction">Fiction</button>
+                      <button class="btn btn-xs btn-outline-amber filter-book-btn" data-category="Health">Health</button>
+                    </div>
+
+                    <div class="book-recommendation-list" id="book-recoms-container">
+                      <!-- Dynamically rendered items -->
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Right side: Reading history logs & streaks -->
+              <div class="flex-column gap-md">
+                
+                <!-- Quick Stats Grid -->
+                <div class="card border-top-amber">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="award" class="text-amber"></i>
+                      <h3>Reading Habits & Accomplishments</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="grid-2col gap-sm">
+                      <div class="stat-card bg-amber-mist text-center p-md flex-column align-center justify-center text-dark rounded-sm">
+                        <i data-lucide="book-copy" class="text-amber text-xl m-bottom-xs"></i>
+                        <span class="block font-xs text-muted">Books Completed</span>
+                        <span class="font-bold text-xxl" id="reading-books-completed">2</span>
+                      </div>
+                      <div class="stat-card bg-amber-mist text-center p-md flex-column align-center justify-center text-dark rounded-sm">
+                        <i data-lucide="scroll" class="text-amber text-xl m-bottom-xs"></i>
+                        <span class="block font-xs text-muted">Total Pages Read</span>
+                        <span class="font-bold text-xxl" id="reading-total-pages-count">480</span>
+                      </div>
+                    </div>
+                    
+                    <div class="weekly-goal-box m-top-md border p-sm rounded-sm text-center">
+                      <div class="font-xs font-bold text-muted m-bottom-xxs">DAILY READING GOAL</div>
+                      <div class="text-normal font-bold">Read 20 pages every day</div>
+                      <p class="font-xs text-muted m-top-xxs">Daily reminder alerts triggers automatically if pages goal is unfulfilled.</p>
+                      <button class="btn btn-outline-amber btn-sm m-top" id="btn-trigger-reading-alert">
+                        <i data-lucide="bell" class="btn-icon"></i> Test Reading Reminder
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Library Archives / Books finished -->
+                <div class="card">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="history" class="text-secondary"></i>
+                      <h3>Completed Book Log</h3>
+                    </div>
+                    <button class="text-btn text-xs text-rose" id="btn-clear-books">Reset History</button>
+                  </div>
+                  <div class="card-body">
+                    <div class="scroll-list-height-sm" id="book-history-list">
+                      <!-- Rendered dynamically -->
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- TAB 5: WATER INTAKE TRACKER -->
+          <section class="tab-panel hidden" id="tab-hydration">
+            <div class="grid-2col">
+              
+              <!-- Left side water visualizer -->
+              <div class="card border-top-blue text-center">
+                <div class="card-header">
+                  <div class="header-heading">
+                    <i data-lucide="droplet-icon" class="text-blue"></i>
+                    <h3>Interactive Hydration Chamber</h3>
+                  </div>
+                </div>
+                <div class="card-body p-relative overflow-hidden flex-column align-center justify-center" style="min-height: 400px;">
+                  
+                  <!-- Interactive Water Flask Container -->
+                  <div class="flask-3d-wrapper">
+                    <div class="flask-wave-effect" id="flask-hydra-wave" style="height: 0%;"></div>
+                    <div class="flask-markings">
+                      <span>2.5 L</span>
+                      <span>2.0 L</span>
+                      <span>1.5 L</span>
+                      <span>1.0 L</span>
+                      <span>0.5 L</span>
+                    </div>
+                    <div class="flask-indicator text-center font-bold font-mono">
+                      <span class="block text-xxl" id="flask-absolute-vol">0 ml</span>
+                      <span class="block text-xs font-normal" id="flask-percent-label">/ 2500 ml (0%)</span>
+                    </div>
+                  </div>
+
+                  <div class="m-top-xl w-full">
+                    <p class="text-muted font-xs m-bottom-sm">Set your customization hydration goals:</p>
+                    <div class="flex align-center justify-center gap-xs max-w-xs mx-auto">
+                      <input type="number" id="hydration-custom-goal" value="2500" class="input-inline font-bold font-mono text-center flex-1" style="width: 100px;" />
+                      <span class="font-sm font-bold">ml</span>
+                      <button class="btn btn-blue btn-xs" id="btn-set-water-goal">Set Goal</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Right water inputs and logs -->
+              <div class="flex-column gap-md">
+                <div class="card border-top-blue">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="plus" class="text-blue"></i>
+                      <h3>Quick Add Drinking Cups</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="water-cups-row">
+                      <button class="water-cup-card btn-water-add" data-amount="250">
+                        <div class="glass-icon bg-blue-mist text-blue">
+                          <i data-lucide="cup-soda"></i>
+                        </div>
+                        <span class="cup-size font-bold block">Small Cup</span>
+                        <span class="cup-vol font-mono font-bold text-muted">+ 250 ml</span>
+                      </button>
+
+                      <button class="water-cup-card btn-water-add" data-amount="350">
+                        <div class="glass-icon bg-blue-mist text-blue">
+                          <i data-lucide="glass-water"></i>
+                        </div>
+                        <span class="cup-size font-bold block">Standard Glass</span>
+                        <span class="cup-vol font-mono font-bold text-muted">+ 350 ml</span>
+                      </button>
+
+                      <button class="water-cup-card btn-water-add" data-amount="500">
+                        <div class="glass-icon bg-blue-mist text-blue">
+                          <i data-lucide="beer"></i>
+                        </div>
+                        <span class="cup-size font-bold block">Large Bottle</span>
+                        <span class="cup-vol font-mono font-bold text-muted">+ 500 ml</span>
+                      </button>
+
+                      <button class="water-cup-card btn-water-add" data-amount="1000">
+                        <div class="glass-icon bg-blue-mist text-blue">
+                          <i data-lucide="test-tube"></i>
+                        </div>
+                        <span class="cup-size font-bold block">Mega Jug</span>
+                        <span class="cup-vol font-mono font-bold text-muted">+ 1.0 L</span>
+                      </button>
+                    </div>
+
+                    <div class="custom-water-log-input flex m-top border-top p-top-md align-center gap-xs">
+                      <input type="number" id="water-custom-add" value="200" placeholder="Custom weight (ml)" class="input-inline font-mono font-bold text-center flex-1" />
+                      <span class="font-sm text-secondary">ml</span>
+                      <button class="btn btn-outline-blue w-lg" id="btn-add-custom-water">Add to Hydration</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="history" class="text-secondary"></i>
+                      <h3>Today's Hydration Logs</h3>
+                    </div>
+                    <button class="text-btn text-xs text-rose" id="btn-clear-water">Reset Water Data</button>
+                  </div>
+                  <div class="card-body">
+                    <div class="scroll-list-height-sm" id="water-logs-list">
+                      <!-- Rendered dynamically -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- TAB 6: DEDICATED HABITS CHECKLIST -->
+          <section class="tab-panel hidden" id="tab-habits">
+            <div class="card border-top-purple m-bottom">
+              <div class="card-body">
+                <div class="row flex justify-between align-center flex-wrap gap-md">
+                  <div>
+                    <h3 class="m-bottom-xxs">Personalized Habit Ledger & Consistency Tracker</h3>
+                    <p class="text-muted font-xs">Habit consistency creates neural automation. Mark today's targets to maintain your streaks.</p>
+                  </div>
+                  <div class="habit-stats-row flex gap-md">
+                    <div class="habit-score bg-purple-mist p-xs rounded-sm text-center">
+                      <span class="block font-xs text-muted">Consistency Score</span>
+                      <span class="font-extrabold text-lg text-primary" id="habit-consistency-score">0%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid-2col">
+              
+              <!-- Left side habits listing -->
+              <div class="card">
+                <div class="card-header border-bottom">
+                  <div class="header-heading">
+                    <i data-lucide="clipboard-list" class="text-purple"></i>
+                    <h3>Today's Habit Checklist</h3>
+                  </div>
+                  <button class="text-btn text-xs" id="btn-reset-habits-state">Reset Checkboxes</button>
+                </div>
+                <div class="card-body p-none">
+                  <div class="habit-full-checklist" id="habits-master-checklist">
+                    <!-- Dynamically rendered checkbox rows -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right side add habits and streaks -->
+              <div class="flex-column gap-md">
+                
+                <!-- Add custom habits form -->
+                <div class="card border-top-purple">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="plus" class="text-purple"></i>
+                      <h3>Add New Daily Habit Type</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <form class="custom-form" id="habit-form">
+                      <div class="form-group">
+                        <label for="habit-name-input">Habit Name</label>
+                        <input type="text" id="habit-name-input" placeholder="e.g. Read 1 Bible Chapter, Avoid Sugar" required />
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group flex-1">
+                          <label for="habit-importance">Priority / Value</label>
+                          <select id="habit-importance">
+                            <option value="high" class="text-rose">⚡ Critical (High Impact)</option>
+                            <option value="medium" class="text-orange" selected>⚡ Essential (Medium Impact)</option>
+                            <option value="low" class="text-blue">⚡ Standard (Min routine)</option>
+                          </select>
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn-purple w-full">
+                        <i data-lucide="plus-circle" class="btn-icon"></i> Add to Habits Loop
+                      </button>
+                    </form>
+                  </div>
+                </div>
+
+                <!-- Unlocked Badges & Milestones -->
+                <div class="card border-top-neutral">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="shield" class="text-purple"></i>
+                      <h3>Consistency Shields & Badges</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="achievement-container-badges" id="awards-badges-grid">
+                      <!-- Badges dynamically injected -->
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- TAB 7: SLEEP & MOOD LOGS -->
+          <section class="tab-panel hidden" id="tab-sleep-mood">
+            <div class="grid-2col">
+              
+              <!-- Left: Sleep logger -->
+              <div class="flex-column gap-md">
+                <div class="card border-top-indigo">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="moon-star" class="text-indigo"></i>
+                      <h3>Sleep Quality Logger</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <form class="custom-form" id="sleep-log-form">
+                      <div class="form-row">
+                        <div class="form-group flex-1">
+                          <label for="sleep-hours">Sleep Duration (Hours)</label>
+                          <input type="number" id="sleep-hours" placeholder="e.g. 7.5" min="2" max="20" step="0.5" required />
+                        </div>
+                        <div class="form-group flex-1">
+                          <label for="sleep-quality">Sleep Quality Indicator</label>
+                          <select id="sleep-quality" required>
+                            <option value="Deep">😴 Deep Rest (Excellent)</option>
+                            <option value="Good" selected>🙂 Good Rest (Refreshed)</option>
+                            <option value="Tired">🥱 Restless Night (Tired)</option>
+                            <option value="Poor">😣 Fitful Sleep (Poor)</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group flex-1">
+                          <label for="sleep-bedtime">Actual Bedtime</label>
+                          <input type="time" id="sleep-bedtime" value="23:00" />
+                          <span class="input-helper">Aim to sleep before midnight</span>
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn-indigo w-full">
+                        <i data-lucide="plus" class="btn-icon"></i> Track & Log Sleep
+                      </button>
+                    </form>
+                  </div>
+                </div>
+
+                <!-- Sleep history list -->
+                <div class="card">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="clipboard" class="text-indigo"></i>
+                      <h3>Weekly Sleep Analytics Ledger</h3>
+                    </div>
+                    <button class="text-btn text-xs text-rose" id="btn-clear-sleep">Clear Sleep Logs</button>
+                  </div>
+                  <div class="card-body">
+                    <div class="scroll-list-height-sm" id="sleep-history-list">
+                      <!-- Dynamically rendered items -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right: Mood tracker details -->
+              <div class="flex-column gap-md">
+                <!-- Advanced mood tracking analytical module -->
+                <div class="card border-top-indigo">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="eye" class="text-indigo"></i>
+                      <h3>Emotional Frequency Mood tracker</h3>
+                    </div>
+                  </div>
+                  <div class="card-body text-center">
+                    <p class="font-xs text-muted m-bottom">Baseline mood data helps correlate sleep cycles with psychological outcomes:</p>
+                    <div class="mood-selectors-row-expanded justify-center gap-sm flex-wrap flex">
+                      <!-- Expanded mood controller options -->
+                      <button class="mood-btn-large" data-mood="superb">
+                        <span class="mood-emoji-lg">🤩</span>
+                        <span class="mood-label-lg font-bold block m-top-xs">Superb</span>
+                      </button>
+                      <button class="mood-btn-large" data-mood="good">
+                        <span class="mood-emoji-lg">🙂</span>
+                        <span class="mood-label-lg font-bold block m-top-xs">Good</span>
+                      </button>
+                      <button class="mood-btn-large" data-mood="neutral">
+                        <span class="mood-emoji-lg">😐</span>
+                        <span class="mood-label-lg font-bold block m-top-xs">Neutral</span>
+                      </button>
+                      <button class="mood-btn-large" data-mood="tired">
+                        <span class="mood-emoji-lg">🥱</span>
+                        <span class="mood-label-lg font-bold block m-top-xs">Tired</span>
+                      </button>
+                      <button class="mood-btn-large" data-mood="stressed">
+                        <span class="mood-emoji-lg">🤯</span>
+                        <span class="mood-label-lg font-bold block m-top-xs">Stressed</span>
+                      </button>
+                    </div>
+
+                    <div class="weekly-sleep-box m-top-xl border p-sm rounded-sm">
+                      <span class="font-xs font-bold text-muted block m-bottom-xs">PREVIOUS LOGGED MOOD HISTORY</span>
+                      <div class="mood-timeline-history flex gap-xs align-center justify-center" id="mood-history-timeline-bar">
+                        <!-- Tiny circular historical icons with emojis inside -->
+                        <div class="font-xs text-muted p-sm">No emotions logged in storage yet. Select emojis above to log metrics.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- TAB 8: MINDFULNESS & ZEN BREATHING -->
+          <section class="tab-panel hidden" id="tab-mindfulness">
+            <div class="grid-2col">
+              
+              <!-- Zen Ring breathing simulator -->
+              <div class="card border-top-emerald text-center">
+                <div class="card-header">
+                  <div class="header-heading">
+                    <i data-lucide="wind" class="text-emerald animate-pulse"></i>
+                    <h3>Breathing & Resonant Coherence Zen circle</h3>
+                  </div>
+                </div>
+                <div class="card-body flex-column align-center justify-center" style="min-height: 420px;">
+                  
+                  <div class="breathing-stage-message m-bottom-xl" id="breathing-text">
+                    Prepare to Breathe
+                  </div>
+
+                  <!-- Breath Simulator Outer ring -->
+                  <div class="breathing-circle-outer" id="breathing-circle-node">
+                    <div class="breathing-circle-inner text-center font-bold">
+                      <span class="block text-xl" id="breathing-instructions">READY</span>
+                    </div>
+                  </div>
+
+                  <div class="breathing-controls m-top-xl flex gap-xs">
+                    <button class="btn btn-emerald w-md" id="btn-start-breathing">
+                      <i data-lucide="play" class="btn-icon"></i> Start Zen Flow
+                    </button>
+                    <button class="btn btn-outline" id="btn-reset-breathing">
+                      <i data-lucide="refresh-cw" class="btn-icon"></i> Reset Timer
+                    </button>
+                  </div>
+
+                  <div class="m-top-md font-xs text-secondary">
+                    Standard Box Breathing cycles: Inhale (4s) → Hold (4s) → Exhale (4s) → Hold (4s)
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Yoga tips, mental wellness guidance -->
+              <div class="flex-column gap-md">
+                <div class="card border-top-neutral">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="shield" class="text-emerald"></i>
+                      <h3>Mental Resilience & Mindfulness Stats</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="meditation-stats-panel grid-2col gap-xs">
+                      <div class="card text-center bg-emerald-mist border p-sm rounded-sm">
+                        <i data-lucide="spa" class="text-emerald text-lg m-bottom-xxs"></i>
+                        <span class="block font-xs text-muted">Sessions Completed</span>
+                        <span class="font-bold text-xl text-dark" id="zen-completed-sessions">0</span>
+                      </div>
+                      <div class="card text-center bg-emerald-mist border p-sm rounded-sm">
+                        <i data-lucide="flame" class="text-emerald text-lg m-bottom-xxs"></i>
+                        <span class="block font-xs text-muted">Zen Streak Count</span>
+                        <span class="font-bold text-xl text-dark" id="zen-streak-days">0 Days</span>
+                      </div>
+                    </div>
+
+                    <div class="mental-wellness-tips m-top">
+                      <h4 class="font-bold font-sm text-dark m-bottom-xs">Simple Coherence Tips</h4>
+                      <ul class="guidance-list font-xs text-muted flex-column gap-xs">
+                        <li>🧘‍♂️ <strong>Morning Vagus Activation:</strong> 3 minutes of slow boxed breathing before digital notifications clears residual cortisol build-ups.</li>
+                        <li>🍵 <strong>Intermittent Stillness:</strong> Reset eye strain using a 20-20-20 rule during computer operation focuses neural centers.</li>
+                        <li>📝 <strong>Mind Dump:</strong> Spend 2 minutes writing down every task clogging executive memory pathways before bed to avoid sleeplessness.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- TAB 9: FOCUS POMODORO TIMER -->
+          <section class="tab-panel hidden" id="tab-focus">
+            <div class="grid-2col">
+              
+              <!-- Focus timer loop -->
+              <div class="card border-top-rose text-center">
+                <div class="card-header">
+                  <div class="header-heading">
+                    <i data-lucide="clock" class="text-rose"></i>
+                    <h3>Focus Pomodoro Circle Timer</h3>
+                  </div>
+                </div>
+                <div class="card-body flex-column align-center justify-center p-relative" style="min-height: 400px;">
+                  
+                  <div class="pomo-mode-badge-wrapper flex gap-xs m-bottom-md">
+                    <button class="btn btn-xs btn-outline-rose active pomo-duration-choice" data-type="work" data-time="25">Work Session (25m)</button>
+                    <button class="btn btn-xs btn-outline-rose pomo-duration-choice" data-type="break" data-time="5">Short Break (5m)</button>
+                  </div>
+
+                  <!-- SVG Circular Timer Progress -->
+                  <div class="pomo-circle-wrapper p-relative">
+                    <svg class="pomo-svg-progress" viewBox="0 0 200 200">
+                      <circle class="ring-track" cx="100" cy="100" r="85" />
+                      <circle class="ring-fill" id="pomo-ring-progress" cx="100" cy="100" r="85" style="stroke-dashoffset: 0;" />
+                    </svg>
+                    <div class="pomo-time font-mono font-bold font-outfit" id="pomo-digital-time">
+                      25:00
+                    </div>
+                  </div>
+
+                  <div class="pomo-controls m-top-xl flex gap-xs justify-center align-center">
+                    <button class="btn btn-rose w-md" id="btn-toggle-pomo-clock">
+                      <i data-lucide="play" class="btn-icon"></i> Start Session
+                    </button>
+                    <button class="btn btn-outline" id="btn-reset-pomo-clock">
+                      <i data-lucide="refresh-cw" class="btn-icon"></i> Reset Timer
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Session logs and break planner -->
+              <div class="flex-column gap-md">
+                <div class="card border-top-rose">
+                  <div class="card-header">
+                    <div class="header-heading">
+                      <i data-lucide="check-circle" class="text-rose"></i>
+                      <h3>Log Focus Tasks</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <p class="font-xs text-muted m-bottom">Declare single focus task objectives to work on during your active pomodoro block:</p>
+                    <form class="custom-form" id="pomo-task-form">
+                      <div class="form-row">
+                        <input type="text" id="pomo-task-name" placeholder="e.g. Debug compiler errors, Complete layout styling" class="flex-3 input-inline" required />
+                        <button type="submit" class="btn btn-rose flex-1">
+                          <i data-lucide="pin" class="btn-icon"></i> Pin Task
+                        </button>
+                      </div>
+                    </form>
+
+                    <div class="pinned-task-container m-top border rounded-sm p-sm" id="pomo-active-task-card">
+                      <span class="font-xs font-bold text-muted block m-bottom-xxs">CURRENT PINNED TASK</span>
+                      <div class="flex justify-between align-center">
+                        <strong id="pomo-active-task-label" class="font-sm text-dark">No task pinned yet of current focus cycle</strong>
+                        <button class="btn btn-xs btn-outline hidden" id="pomo-task-done-btn">Done</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Finished tasks archive -->
+                <div class="card">
+                  <div class="card-header border-bottom">
+                    <div class="header-heading">
+                      <i data-lucide="history" class="text-secondary"></i>
+                      <h3>Completed Focus Blocks</h3>
+                    </div>
+                    <span class="badge badge-rose" id="pomo-completed-count-badge">0 Done</span>
+                  </div>
+                  <div class="card-body">
+                    <div class="scroll-list-height-sm" id="pomo-history-list">
+                      <!-- Dynamically rendered -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- TAB 10: GOALS & ANALYTICS DASHBOARD -->
+          <section class="tab-panel hidden" id="tab-analytics">
+            <!-- Dynamic goal adjustment cards -->
+            <div class="grid-2col m-bottom">
+              
+              <!-- Metrics list -->
+              <div class="card border-top-emerald">
+                <div class="card-header border-bottom">
+                  <div class="header-heading">
+                    <i data-lucide="target" class="text-emerald"></i>
+                    <h3>Current Wellness Goals & Milestones</h3>
+                  </div>
+                </div>
+                <div class="card-body flex-column gap-md">
+                  
+                  <!-- Weight scale goal -->
+                  <div class="goal-item-row p-bottom border-bottom">
+                    <div class="flex justify-between align-center m-bottom-xs">
+                      <div>
+                        <strong class="font-normal block font-sm">Fitness / Weight Goal Progress</strong>
+                        <span class="font-xs text-secondary" id="goal-weight-text">Current: 75 kg | Target: 72 kg</span>
+                      </div>
+                      <button class="btn btn-outline btn-xs" id="btn-edit-weight-goal">Edit Metric</button>
+                    </div>
+                    <div class="progress-bar-bg height-sm">
+                      <div class="progress-bar-fill bg-emerald animate-progress" id="goal-weight-fill" style="width: 80%;"></div>
+                    </div>
+                  </div>
+
+                  <!-- Book Count Goal -->
+                  <div class="goal-item-row p-bottom border-bottom">
+                    <div class="flex justify-between align-center m-bottom-xs">
+                      <div>
+                        <strong class="font-normal block font-sm">Aesthetic Reading Goal Achievements</strong>
+                        <span class="font-xs text-secondary" id="goal-reading-text">Current: 2 / 12 books finished</span>
+                      </div>
+                      <button class="btn btn-outline btn-xs" id="btn-edit-reading-goal">Edit Target</button>
+                    </div>
+                    <div class="progress-bar-bg height-sm">
+                      <div class="progress-bar-fill bg-amber" id="goal-reading-fill" style="width: 17%;"></div>
+                    </div>
+                  </div>
+
+                  <!-- Daily Water Target -->
+                  <div class="goal-item-row">
+                    <div class="flex justify-between align-center m-bottom-xs">
+                      <div>
+                        <strong class="font-normal block font-sm">Minimum Hydration Threshold</strong>
+                        <span class="font-xs text-secondary" id="goal-water-text">Current target checklist index: 2500 ml</span>
+                      </div>
+                      <button class="btn btn-outline btn-xs" id="btn-edit-water-goal">Edit</button>
+                    </div>
+                    <div class="progress-bar-bg height-sm">
+                      <div class="progress-bar-fill bg-blue" style="width: 100%;"></div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- CSV details and instructions -->
+              <div class="card border-top-purple">
+                <div class="card-header border-bottom">
+                  <div class="header-heading">
+                    <i data-lucide="database" class="text-purple"></i>
+                    <h3>Backup & Data Export Controller</h3>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <p class="font-xs text-muted m-bottom-md">Your habit, sleep, hydration, and exercise achievements are securely logged strictly on your relative machine sandbox local Storage. You can clear, reset or export this data as standard CSV records for review:</p>
+                  
+                  <div class="flex-column gap-sm">
+                    <button class="btn btn-purple pointer w-full text-center" id="btn-export-csv">
+                      <i data-lucide="download" class="btn-icon"></i> Export Data Logs as CSV
+                    </button>
+                    <button class="btn btn-outline pointer w-full text-center" id="btn-reset-everything-config">
+                      <i data-lucide="trash-2" class="btn-icon"></i> Reset All Storage & Database Data
+                    </button>
+                  </div>
+                  
+                  <div class="border p-sm rounded-sm m-top bg-gradient-amber text-dark font-xs">
+                    🔒 <strong>Local Privacy Rules:</strong> Your fitness records, sleep timings, diet habits, book indices, and emotional moods are entirely contained locally in index-bound keys, which means none of your health and habit metrics are exposed to the external internet.
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Achievement badge list full viewport view -->
+            <div class="card border-top-neutral">
+              <div class="card-header">
+                <div class="header-heading">
+                  <i data-lucide="trophy" class="text-orange"></i>
+                  <h3>Full Accomplishment Badge Cases</h3>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="grid-4col text-center" id="full-badges-grid">
+                  <!-- JS handles the badge rendering with active locked filters -->
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+      </main>
+
+    </div>
+
+    <!-- Script loading entry -->
+    <script type="module" src="/script.js"></script>
+  </body>
+</html>
